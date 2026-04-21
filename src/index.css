@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Railway Training Institute, Ghazipur — Design System
+   All colors are HSL. Navy primary, white surfaces, light grey, gold accent. */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Navy #0B3D91 */
+    --primary: 220 86% 31%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 86% 45%;
+    --primary-deep: 220 86% 22%;
+
+    --secondary: 210 30% 96%;
+    --secondary-foreground: 220 86% 22%;
+
+    --muted: 210 25% 96%;
+    --muted-foreground: 215 16% 42%;
+
+    /* Gold accent */
+    --accent: 42 86% 52%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 64% 38%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 215 20% 88%;
+    --input: 215 20% 90%;
+    --ring: 220 86% 31%;
+
+    --radius: 0.6rem;
+
+    /* Sidebar (dashboard) */
+    --sidebar-background: 220 86% 22%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 42 86% 52%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 220 60% 28%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 220 60% 28%;
+    --sidebar-ring: 42 86% 52%;
+
+    /* Gradients & shadows */
+    --gradient-hero: linear-gradient(135deg, hsl(220 86% 22%) 0%, hsl(220 86% 31%) 60%, hsl(220 86% 45%) 100%);
+    --gradient-band: linear-gradient(90deg, hsl(220 86% 22%), hsl(220 86% 31%));
+    --shadow-elegant: 0 10px 30px -12px hsl(220 86% 22% / 0.25);
+    --shadow-card: 0 1px 3px hsl(220 30% 10% / 0.06), 0 8px 24px -12px hsl(220 30% 10% / 0.08);
+    --transition-base: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 96%;
+    --card: 222 47% 9%;
+    --card-foreground: 210 40% 96%;
+    --popover: 222 47% 9%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 220 86% 60%;
+    --primary-foreground: 222 47% 7%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 42 86% 55%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 210 40% 96%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 220 86% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .section-y {
+    @apply py-12 md:py-20;
+  }
+  .gov-band {
+    background: var(--gradient-band);
+  }
+}
