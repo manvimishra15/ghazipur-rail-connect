@@ -11,22 +11,23 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { BookOpen, LayoutDashboard, Megaphone, ShieldCheck, Train } from "lucide-react";
-import type { Role } from "@/data/mock";
+import { Bell, BookOpen, GraduationCap, Images, LayoutDashboard, Megaphone, Newspaper, Train, Users } from "lucide-react";
 
-const menus: Record<Role, { label: string; to: string; icon: typeof Train }[]> = {
-  admin: [
-    { label: "Overview", to: "/dashboard", icon: LayoutDashboard },
-    { label: "News Module", to: "/dashboard", icon: Megaphone },
-    { label: "Training Module", to: "/dashboard", icon: BookOpen },
-    { label: "Access Control", to: "/dashboard", icon: ShieldCheck },
-  ],
-};
+const menuItems = [
+  { label: "Overview", to: "/dashboard", icon: LayoutDashboard, end: true },
+  { label: "Announcements", to: "/dashboard/announcements", icon: Megaphone, end: false },
+  { label: "Courses", to: "/dashboard/courses", icon: BookOpen, end: false },
+  { label: "Gallery", to: "/dashboard/gallery", icon: Images, end: false },
+  { label: "Faculty", to: "/dashboard/faculty", icon: Users, end: false },
+  { label: "Results", to: "/dashboard/results", icon: GraduationCap, end: false },
+  { label: "E-Books", to: "/dashboard/ebooks", icon: BookOpen, end: false },
+  { label: "Magazine", to: "/dashboard/magazine", icon: Newspaper, end: false },
+  { label: "Notices", to: "/dashboard/notices", icon: Bell, end: false },
+];
 
-export function DashboardSidebar({ role }: { role: Role }) {
+export function DashboardSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const items = menus[role];
 
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border">
@@ -49,12 +50,12 @@ export function DashboardSidebar({ role }: { role: Role }) {
           {!collapsed && <SidebarGroupLabel>Workspace</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={`${item.label}-${item.to}`}>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.to}>
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.to}
-                      end
+                      end={item.end}
                       className="text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       activeClassName="!bg-sidebar-accent !text-sidebar-accent-foreground font-medium"
                     >

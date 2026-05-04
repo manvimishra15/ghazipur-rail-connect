@@ -1,40 +1,32 @@
 import { api } from "./api";
-import type { Role } from "@/data/mock";
-
-const USE_MOCK = !import.meta.env.VITE_API_BASE_URL;
 
 export type AuthUser = {
   id: string;
   name: string;
-  email: string;
-  role: Role;
+  email?: string;
+  mobile?: string;
+  role?: string;
+  type: "admin" | "trainee";
+  batch?: string;
+  course?: string;
+  roll_number?: string;
 };
 
-export type LoginPayload = {
-  email: string;
-  password: string;
-};
+export type LoginPayload = { email: string; password: string };
+export type TraineeLoginPayload = { mobile: string; dob: string };
 
 export const authApi = {
   async login(payload: LoginPayload): Promise<{ token: string; user: AuthUser }> {
-    if (USE_MOCK) {
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      return {
-        token: `mock.admin.${Date.now()}`,
-        user: {
-          id: "mock-admin",
-          name: "Principal / Admin",
-          email: payload.email,
-          role: "admin",
-        },
-      };
-    }
+    const { data } = await api.post<{ token: string; user: AuthUser }>("/auth/admin/login", payload);
+    return data;
+  },
 
-    const { data } = await api.post<{ token: string; user: AuthUser }>("/api/login", payload);
+  async traineeLogin(payload: TraineeLoginPayload): Promise<{ token: string; user: AuthUser }> {
+    const { data } = await api.post<{ token: string; user: AuthUser }>("/auth/trainee/login", payload);
     return data;
   },
 
   async logout(): Promise<void> {
-    if (!USE_MOCK) await api.post("/auth/logout").catch(() => undefined);
+    // JWT is stateless — just clear client-side
   },
 };

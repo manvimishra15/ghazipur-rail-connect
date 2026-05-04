@@ -14,7 +14,7 @@ export default function DashboardLayout() {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-secondary/40">
-        <DashboardSidebar role={user.role} />
+        <DashboardSidebar />
 
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-border bg-background px-3">
