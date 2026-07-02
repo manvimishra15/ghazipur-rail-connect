@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: zrti-backend
+    ports:
+      - "5001:5000"
+    environment:
+      PORT: 5000
+      JWT_SECRET: local_dev_secret_change_in_production
+      JWT_EXPIRES_IN: 7d
+      DB_PATH: ./database/zrti.db
+      UPLOADS_PATH: ./uploads
+      FRONTEND_URL: http://localhost:8088
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - zrti_uploads:/app/uploads
+      - zrti_db:/app/database
+    networks:
+      - zrti_net
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: zrti-frontend
+    ports:
+      - "8088:8080"
+    environment:
+      VITE_API_BASE_URL: http://localhost:5001/api
+      BACKEND_URL: http://backend:5000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - zrti_net
+    restart: unless-stopped
+
+volumes:
+  zrti_uploads:
+  zrti_db:
+
+networks:
+  zrti_net:
+    driver: bridge

@@ -1,11 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { authApi, type AuthUser, type LoginPayload } from "@/services/auth";
+import { authApi, type AuthUser, type LoginPayload, type TraineeLoginPayload } from "@/services/auth";
 
 type AuthState = {
   user: AuthUser | null;
   token: string | null;
   loading: boolean;
   login: (payload: LoginPayload) => Promise<AuthUser>;
+  traineeLogin: (payload: TraineeLoginPayload) => Promise<AuthUser>;
   logout: () => void;
 };
 
@@ -14,7 +15,7 @@ const AuthContext = createContext<AuthState | undefined>(undefined);
 const TOKEN_KEY = "rti_token";
 const USER_KEY = "rti_user";
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,23 +25,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const u = localStorage.getItem(USER_KEY);
     if (t && u) {
       setToken(t);
-      try {
-        setUser(JSON.parse(u) as AuthUser);
-      } catch {
-        /* noop */
-      }
+      try { setUser(JSON.parse(u) as AuthUser); } catch { /* noop */ }
     }
     setLoading(false);
   }, []);
 
-  const login = useCallback(async (payload: LoginPayload) => {
-    const res = await authApi.login(payload);
+  const persist = useCallback((res: { token: string; user: AuthUser }) => {
     localStorage.setItem(TOKEN_KEY, res.token);
     localStorage.setItem(USER_KEY, JSON.stringify(res.user));
     setToken(res.token);
     setUser(res.user);
     return res.user;
   }, []);
+
+  const login = useCallback(async (payload: LoginPayload) => {
+    const res = await authApi.login(payload);
+    return persist(res);
+  }, [persist]);
+
+  const traineeLogin = useCallback(async (payload: TraineeLoginPayload) => {
+    const res = await authApi.traineeLogin(payload);
+    return persist(res);
+  }, [persist]);
 
   const logout = useCallback(() => {
     void authApi.logout();
@@ -51,8 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ user, token, loading, login, logout }),
-    [user, token, loading, login, logout],
+    () => ({ user, token, loading, login, traineeLogin, logout }),
+    [user, token, loading, login, traineeLogin, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

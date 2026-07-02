@@ -6,8 +6,19 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: "all",
     hmr: {
       overlay: false,
+    },
+    proxy: {
+      '/api': {
+        target: process.env.BACKEND_URL || 'http://localhost:5001',
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: process.env.BACKEND_URL || 'http://localhost:5001',
+        changeOrigin: true,
+      },
     },
   },
   plugins: [react()],

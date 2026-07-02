@@ -6,8 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SectionHeading } from "@/components/SectionHeading";
 import { AnnouncementCard } from "@/components/AnnouncementCard";
-import { announcementsApi } from "@/services/announcements";
-import type { Announcement } from "@/data/mock";
+import { announcementsApi, type Announcement } from "@/services/announcements";
 import { principalMessage, quickLinks, siteMeta } from "@/data/mock";
 import heroImg from "@/assets/hero-railway.jpg";
 
@@ -116,11 +115,10 @@ export default function Home() {
             description="Dummy content is structured as reusable cards and can be connected later to /api/news."
           />
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {!announcements
-              ? Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className="h-44 rounded-lg" />)
-              : announcements.map((announcement, index) => (
-                  <AnnouncementCard key={announcement.id} a={announcement} highlight={index === 0} />
-                ))}
+            {announcements === null && Array.from({ length: 3 }, (_, i) => <Skeleton key={`skel-${i}`} className="h-44 rounded-lg" />)}
+            {announcements !== null && announcements.map((announcement, index) => (
+              <AnnouncementCard key={announcement.id} a={announcement} highlight={index === 0} />
+            ))}
           </div>
         </div>
       </section>
@@ -133,7 +131,8 @@ export default function Home() {
         />
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {quickLinks.map((link, index) => {
-            const Icon = index === 0 ? CalendarDays : index === 1 ? Newspaper : Contact;
+            const iconMap = [CalendarDays, Newspaper, Contact];
+            const Icon = iconMap[index] ?? Contact;
             return (
               <Link
                 key={link.title}
